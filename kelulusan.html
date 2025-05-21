@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Kelulusan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .search-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .lulus {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>PENGUMUMAN KELULUSAN</h1>
+    
+    <div class="search-box">
+        <h2>Cek Status Kelulusan</h2>
+        <input type="text" id="namaInput" placeholder="Masukkan Nama Lengkap">
+        <input type="date" id="tanggalLahirInput">
+        <button onclick="cariSiswa()">Cek Kelulusan</button>
+    </div>
+    
+    <div id="result" class="result">
+        <h2>Hasil Pencarian</h2>
+        <div id="studentData"></div>
+        <table id="resultTable">
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Tanggal Lahir</th>
+                    <th>NISN</th>
+                    <th>Nilai</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="resultBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Data siswa
+        const siswaData = [
+            {nama: "ABDUL RAHMAN", nisn: "82149684", nilai: "70", status: "lulus"},
+            {nama: "AHDAYANTI", nisn: "71872481", nilai: "70", status: "lulus"},
+            {nama: "ALMIRA TUNGGAL DEWI", nisn: "83832456", nilai: "70", status: "lulus"},
+            {nama: "ALPADLIA MULTAZAM", nisn: "84921294", nilai: "70", status: "lulus"},
+            {nama: "ANANDA AZIFAH RISAL", nisn: "76511437", nilai: "70", status: "lulus"},
+            {nama: "ARINI MUTHMAINNAH", nisn: "79702130", nilai: "70", status: "lulus"},
+            {nama: "ASYIFA TUN MAYRA", nisn: "84070265", nilai: "70", status: "lulus"},
+            {nama: "DEWI WULANDARI", nisn: "71096568", nilai: "70", status: "lulus"},
+            {nama: "FIKA HANDAYANI", nisn: "87519484", nilai: "70", status: "lulus"},
+            {nama: "IMELDA", nisn: "89207557", nilai: "70", status: "lulus"},
+            {nama: "IMELDA SABAR", nisn: "88772699", nilai: "70", status: "lulus"},
+            {nama: "JIHAN APRIL YANTI", nisn: "81893937", nilai: "70", status: "lulus"},
+            {nama: "KHAIRUN NISA", nisn: "76178354", nilai: "70", status: "lulus"},
+            {nama: "KHUSNAINI BASRI", nisn: "82067499", nilai: "70", status: "lulus"},
+            {nama: "MAYANG SEGARA", nisn: "75191759", nilai: "70", status: "lulus"},
+            {nama: "MELISA SUDIN", nisn: "86977269", nilai: "70", status: "lulus"},
+            {nama: "MISBAH", nisn: "88757841", nilai: "70", status: "lulus"},
+            {nama: "NAHDAH NABILA S", nisn: "89615861", nilai: "70", status: "lulus"},
+            {nama: "NUR AISYA", nisn: "75270954", nilai: "70", status: "lulus"},
+            {nama: "NUR FAUZIAH M", nisn: "77760716", nilai: "70", status: "lulus"},
+            {nama: "NURAZIZAH", nisn: "89973819", nilai: "70", status: "lulus"},
+            {nama: "NURUL HIDAYAH PUTRI", nisn: "82679263", nilai: "70", status: "lulus"},
+            {nama: "PUTRI ANASTASYA", nisn: "81883824", nilai: "70", status: "lulus"},
+            {nama: "RAHMA ALMIRA", nisn: "86745886", nilai: "70", status: "lulus"},
+            {nama: "RAIDAH FIRYAL ABIDAH", nisn: "85342426", nilai: "70", status: "lulus"},
+            {nama: "REZKI", nisn: "69196496", nilai: "70", status: "lulus"},
+            {nama: "SRI AYUNI", nisn: "89777246", nilai: "70", status: "lulus"},
+            {nama: "SUCI RAHMADANI", nisn: "89509984", nilai: "70", status: "lulus"},
+            {nama: "SUKMA", nisn: "79169490", nilai: "70", status: "lulus"},
+            {nama: "ULFAUZIA", nisn: "85534983", nilai: "70", status: "lulus"},
+            {nama: "WILDA NATASYA", nisn: "89491429", nilai: "70", status: "lulus"},
+            {nama: "HUSNA AMIR", nisn: "88305623", nilai: "70", status: "lulus"},
+            {nama: "FANESA NUR FADILLAH", nisn: "72167385", nilai: "70", status: "lulus"},
+            {nama: "SUCI ANGGUN ANUGRAENI", nisn: "88744922", nilai: "70", status: "lulus"}
+        ];
+
+        function cariSiswa() {
+            const nama = document.getElementById('namaInput').value.toUpperCase();
+            const tanggalLahir = document.getElementById('tanggalLahirInput').value;
+            
+            // Cari siswa berdasarkan nama
+            const siswa = siswaData.find(s => s.nama === nama);
+            
+            const resultDiv = document.getElementById('result');
+            const studentDataDiv = document.getElementById('studentData');
+            const resultBody = document.getElementById('resultBody');
+            
+            if (siswa) {
+                resultDiv.style.display = 'block';
+                studentDataDiv.innerHTML = `
+                    <p><strong>Nama:</strong> ${siswa.nama}</p>
+                    <p><strong>NISN:</strong> ${siswa.nisn}</p>
+                    <p><strong>Nilai:</strong> ${siswa.nilai}</p>
+                    <p><strong>Status:</strong> <span class="${siswa.status}">${siswa.status.toUpperCase()}</span></p>
+                `;
+                
+                // Kosongkan tabel sebelum mengisi
+                resultBody.innerHTML = '';
+                
+                // Tambahkan baris untuk siswa yang ditemukan
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${siswa.nama}</td>
+                    <td>${tanggalLahir || '-'}</td>
+                    <td>${siswa.nisn}</td>
+                    <td>${siswa.nilai}</td>
+                    <td class="${siswa.status}">${siswa.status.toUpperCase()}</td>
+                `;
+                resultBody.appendChild(row);
+            } else {
+                resultDiv.style.display = 'block';
+                studentDataDiv.innerHTML = '<p style="color: red;">Data siswa tidak ditemukan. Silakan periksa kembali nama yang Anda masukkan.</p>';
+                resultBody.innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
